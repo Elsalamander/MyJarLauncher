@@ -13,11 +13,20 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+/*********************************************************************
+ * Grafico dei dati
+ * 
+ * 
+ * @author: Elsalamander
+ * @data: 14 set 2022
+ * @version: v1.2.1
+ * 
+ *********************************************************************/
 public class GraphPanel extends JPanel {
 	
 	private static final long serialVersionUID = 5377956594142614526L;
 	private int padding = 10;
-    private int labelPadding = 20;
+    private int labelPadding = 25;
     private Color lineColor = new Color(44, 102, 230, 180);
     private Color pointColor = new Color(100, 100, 100, 180);
     private Color gridColor = new Color(200, 200, 200, 200);
@@ -25,10 +34,14 @@ public class GraphPanel extends JPanel {
     private int pointWidth = 4;
     private int numberYDivisions = 10;
     private List<Double> scores;
+    
+    private double max;
+    private double min;
 
-    public GraphPanel(List<Double> scores) {
+    public GraphPanel(List<Double> scores, double max, double min) {
         this.scores = scores;
-        //setPreferredSize(new Dimension(600, 110));
+        this.max = max;
+        this.min = min;
     }
 
     @Override
@@ -38,12 +51,12 @@ public class GraphPanel extends JPanel {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         double xScale = ((double) getWidth() - (2 * padding) - labelPadding) / (scores.size() - 1);
-        double yScale = ((double) getHeight() - 2 * padding - labelPadding) / 100;
+        double yScale = ((double) getHeight() - 2 * padding - labelPadding) / (this.max - this.min);
 
         List<Point> graphPoints = new ArrayList<>();
         for (int i = 0; i < scores.size(); i++) {
             int x1 = (int) (i * xScale + padding + labelPadding);
-            int y1 = (int) ((100 - scores.get(i)) * yScale + padding);
+            int y1 = (int) ((this.max - scores.get(i)) * yScale + padding);
             graphPoints.add(new Point(x1, y1));
         }
 
@@ -63,7 +76,7 @@ public class GraphPanel extends JPanel {
                 g2.drawLine(padding + labelPadding + 1 + pointWidth, y0, getWidth() - padding, y1);
                 g2.setColor(Color.BLACK);
                 if(i % 2 == 0) {
-                	String yLabel = (int) ((100 * ((i * 1.0) / numberYDivisions)) * 100) / 100 + "";
+                	String yLabel = ((int) ((this.min + (this.max - this.min) * ((i * 1.0) / numberYDivisions)) * 100)) / 100.0 + "";
                     FontMetrics metrics = g2.getFontMetrics();
                     int labelWidth = metrics.stringWidth(yLabel);
                     g2.drawString(yLabel, x0 - labelWidth - 5, y0 + (metrics.getHeight() / 2) - 3);
@@ -149,8 +162,8 @@ public class GraphPanel extends JPanel {
      */
     public void setScores(List<Double> scores) {
         this.scores = scores;
-        invalidate();
-        this.repaint();
+        super.invalidate();
+        super.repaint();
     }
 
     /**
@@ -158,6 +171,40 @@ public class GraphPanel extends JPanel {
      * @return
      */
     public List<Double> getScores() {
-        return scores;
+        return this.scores;
     }
+
+	/**
+	 * @return the max
+	 */
+	public double getMax(){
+		return this.max;
+	}
+
+	/**
+	 * @return the min
+	 */
+	public double getMin(){
+		return this.min;
+	}
+
+	/**
+	 * @param max the max to set
+	 */
+	public void setMax(double max){
+		this.max = max;
+		super.invalidate();
+        super.repaint();
+	}
+
+	/**
+	 * @param min the min to set
+	 */
+	public void setMin(double min){
+		this.min = min;
+		super.invalidate();
+        super.repaint();
+	}
+	
+	
 }

@@ -6,6 +6,15 @@ import java.util.TreeMap;
 
 import it.elsalamander.loader.executeJar.ExecuteJar;
 
+/*********************************************************************
+ * Contenitore di tutti gli oggetti per i processi da eseguire
+ * 
+ * 
+ * @author: Elsalamander
+ * @data: 14 set 2022
+ * @version: v2.0.3
+ * 
+ *********************************************************************/
 public class ContainerProcess{
 	
 	private Map<Integer, ExecuteJar> jars;
@@ -21,10 +30,28 @@ public class ContainerProcess{
 	}
 	
 	public int loadJar(File file) {
+		if(this.contain(file)) {
+			return -1;
+		}
+		
 		ExecuteJar jar = new ExecuteJar(file);
 		this.jars.put(this.count, jar);
 		this.count++;
 		return this.count-1;
+	}
+
+	/**
+	 * Controlla se questo file è gia stato caricato
+	 * @param file
+	 * @return
+	 */
+	public boolean contain(File file){
+		for(ExecuteJar jar : this.jars.values()) {
+			if(jar.getFile().getPath().equals(file.getPath())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

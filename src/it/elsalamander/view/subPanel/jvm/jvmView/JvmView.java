@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -17,8 +18,18 @@ import javax.swing.JTextArea;
 
 import it.elsalamander.loader.executeJar.ExecuteJar;
 import it.elsalamander.prove.TextAreaOutputStream;
+import it.elsalamander.view.subPanel.globalMetrics.Metrics;
 import it.elsalamander.view.subPanel.jvm.JvmSubPanel;
 
+/*********************************************************************
+ * Interfaccia grafica per la console
+ * 
+ * 
+ * @author: Elsalamander
+ * @data: 14 set 2022
+ * @version: v2.1.1
+ * 
+ *********************************************************************/
 public class JvmView extends JvmSubPanel{
 	
 	private static final long serialVersionUID = 2365749296751448554L;
@@ -28,7 +39,7 @@ public class JvmView extends JvmSubPanel{
 	private JButton start;
 	private JButton settings;
 	
-	private JvmMetrics metrics;
+	private Metrics metrics;
 	
 	private JTextArea ta;
 	private PrintStream ps;
@@ -65,6 +76,9 @@ public class JvmView extends JvmSubPanel{
 		this.head = new JPanel();
 		this.head.setLayout(new BoxLayout(this.head, BoxLayout.X_AXIS));
 		
+		//crea il panel di metrica
+		this.metrics = new JvmMetrics(this);
+		
 		//dimensione massima del pannello di testa
 		this.head.setMaximumSize(new Dimension(Integer.MAX_VALUE, 200));
 		
@@ -77,6 +91,7 @@ public class JvmView extends JvmSubPanel{
         start.addActionListener(event -> {
         	if(jar.getProcess() == null || !jar.getProcess().isAlive()) {
         		jar.runJar(ps);
+        		this.metrics.startTask();
         		try{
 					ps.write("Avvio\n".getBytes());
 				}catch(IOException e){
@@ -96,7 +111,8 @@ public class JvmView extends JvmSubPanel{
         //FINE pannello interno
         this.head.add(internalPanel);
         
-        this.metrics = new JvmMetrics(this);
+        this.head.add(Box.createHorizontalStrut(10));
+        
 		this.head.add(this.metrics);
 		
 		super.add(this.head, BorderLayout.NORTH);
@@ -149,5 +165,11 @@ public class JvmView extends JvmSubPanel{
 			this.jar.getProcess().destroy();
 		}
 	}
-	
+
+	/**
+	 * @return the jar
+	 */
+	public ExecuteJar getJar(){
+		return this.jar;
+	}
 }

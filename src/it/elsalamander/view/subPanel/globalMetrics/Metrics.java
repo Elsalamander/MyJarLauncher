@@ -5,28 +5,42 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Toolkit;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/*********************************************************************
+ * Classe astratta per le metriche
+ * 
+ * 
+ * @author: Elsalamander
+ * @data: 14 set 2022
+ * @version: v2.1.2
+ * 
+ *********************************************************************/
 public abstract class Metrics extends JPanel{
 	
 	private static final long serialVersionUID = 6835793251262495491L;
 
 	public static final Font FONT = new Font(Font.DIALOG, Font.PLAIN, 14);
-	private static final int SIZEGRAPH = 60;
+	public static final DecimalFormat df = new DecimalFormat("0.00");
+	static{
+		df.setRoundingMode(RoundingMode.UP);
+	}
+	public static final int SIZEGRAPH = 60;
 
 	protected String name;
-	protected long current;
-	protected long med;
-	protected long max;
-	protected long min;
+	protected double current;
+	protected double med;
+	protected double max;
+	protected double min;
 	protected List<Double> data;
 	
 	private JPanel[] subPanels;
@@ -48,14 +62,7 @@ public abstract class Metrics extends JPanel{
 		//crea la view
 		this.createView();
 		
-		//imposta la view
-		super.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-		
-		//imposta il bordo
-		super.setBorder(BorderFactory.createTitledBorder(title));
-		
-		//crea il task
-		this.task = new MetricTask(this);
+		//set time task
 		this.secondTask = second;
 	}
 
@@ -76,6 +83,7 @@ public abstract class Metrics extends JPanel{
 		this.min = 0;
 		this.data = new ArrayList<Double>(SIZEGRAPH);
 		
+		this.data.clear();
         for(int i = 0; i < SIZEGRAPH + 1; i++) {
         	this.data.add(0.0);
         }
@@ -93,16 +101,16 @@ public abstract class Metrics extends JPanel{
 	 * addValueToList
 	 */
 	protected void upDateValue() {
-		this.max = (long) this.getMaxScore();
-		this.min = (long) this.getMinScore();
+		this.max = this.getMaxScore();
+		this.min = this.getMinScore();
 		
-		this.current = this.data.get(SIZEGRAPH-1).longValue();
+		this.current = this.data.get(this.data.size()-1);
 		
 		double total = 0;
 		for(int i = 0; i < SIZEGRAPH; i++) {
 			total += data.get(60-i);
 		}
-		this.med = (long) (total/60);
+		this.med = total/60;
 	}
 	
 	/**
@@ -189,6 +197,7 @@ public abstract class Metrics extends JPanel{
 	public void startTask() {
 		//avvia il task
         if(this.timer == null) {
+        	this.task = new MetricTask(this);
         	this.timer = new Timer();
         	this.timer.schedule(task, 0, this.secondTask * 1000);
         }

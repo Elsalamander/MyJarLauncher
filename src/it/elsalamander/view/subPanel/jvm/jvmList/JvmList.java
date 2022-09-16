@@ -24,7 +24,7 @@ import it.elsalamander.view.subPanel.jvm.jvmView.JvmView;
  * 
  * @author: Elsalamander
  * @data: 12 set 2022
- * @version: v1.0.0
+ * @version: v2.2.1
  * 
  *********************************************************************/
 public class JvmList extends JToolBar{

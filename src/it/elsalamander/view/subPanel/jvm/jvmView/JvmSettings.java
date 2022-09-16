@@ -8,8 +8,18 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+/*********************************************************************
+ * Interfaccia grafiche per le opzioni di avvio. da finire
+ * 
+ * 
+ * @author: Elsalamander
+ * @data: 14 set 2022
+ * @version: v1.0.0
+ * 
+ *********************************************************************/
 public class JvmSettings extends JDialog{
 	
+	private static final long serialVersionUID = -1640036551203278022L;
 	private final JPanel contentPanel = new JPanel();
 	
 	/**

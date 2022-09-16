@@ -10,7 +10,7 @@ import it.elsalamander.view.subPanel.globalMetrics.GraphPanel;
 import it.elsalamander.view.subPanel.globalMetrics.Metrics;
 
 /*********************************************************************
- * Metrica per la CPU
+ * Metrica per la RAM
  * 
  * 
  * @author: Elsalamander
@@ -18,7 +18,7 @@ import it.elsalamander.view.subPanel.globalMetrics.Metrics;
  * @version: v2.0.2
  * 
  *********************************************************************/
-public class CPUMetric extends Metrics{
+public class RAMMetric extends Metrics{
 	
 	private static final long serialVersionUID = -5352664349206535284L;
 	private static final String current = "Corrente";
@@ -29,13 +29,16 @@ public class CPUMetric extends Metrics{
 	private static final String separator = ": ";
 	private static final String nullValue = "-";
 	
+	private static final double MOLT = 1024*1024*1024;
+	private static final double TOTALRAM = MyJarLauncher.getInstance().getSysteminfo().getHardware().getMemory().getTotal() / MOLT;
+	
 	protected GraphPanel graph;
 	
 	/**
 	 * Create the panel.
 	 */
-	public CPUMetric(){
-		super("CPU", 1);
+	public RAMMetric(){
+		super("RAM", 1);
 		
 		//avvia il task
 		super.startTask();
@@ -44,7 +47,7 @@ public class CPUMetric extends Metrics{
 	@Override
 	protected void initMetrics(){
 		//crea il grafico
-		this.graph = new GraphPanel(super.data, 100, 0);
+		this.graph = new GraphPanel(super.data,TOTALRAM , 0);
 	}
 
 	@Override
@@ -71,13 +74,13 @@ public class CPUMetric extends Metrics{
 
 	@Override
 	protected void upDate(){
-		double total = MyJarLauncher.getInstance().getOperatesystem().getProcess(MyJarLauncher.getInstance().getPid()).getProcessCpuLoadCumulative();
+		double total = MyJarLauncher.getInstance().getOperatesystem().getProcess(MyJarLauncher.getInstance().getPid()).getResidentSetSize();
 		for(ExecuteJar jar : MyJarLauncher.getInstance().getContainer().getJars().values()) {
 			if(jar.getProcess() != null && jar.getProcess().isAlive()) {
-				total += jar.getDataProcess().getData().getProcessCpuLoadCumulative();
+				total += jar.getDataProcess().getData().getResidentSetSize();
 			}
 		}
-		super.addValueToList(total);
+		super.addValueToList(total/MOLT);
 	}
 
 	@Override

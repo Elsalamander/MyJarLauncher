@@ -1,41 +1,44 @@
 package it.elsalamander.view.subPanel.globalMetrics.metriche;
 
 import java.awt.Dimension;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 
 import it.elsalamander.MyJarLauncher;
-import it.elsalamander.loader.executeJar.ExecuteJar;
 import it.elsalamander.view.subPanel.globalMetrics.GraphPanel;
 import it.elsalamander.view.subPanel.globalMetrics.Metrics;
+import oshi.hardware.NetworkIF;
 
 /*********************************************************************
- * Metrica per la CPU
+ * Metrica per il Network
  * 
  * 
  * @author: Elsalamander
  * @data: 14 set 2022
- * @version: v2.0.2
+ * @version: v2.0.1
  * 
  *********************************************************************/
-public class CPUMetric extends Metrics{
+public class NetMetric extends Metrics{
 	
 	private static final long serialVersionUID = -5352664349206535284L;
-	private static final String current = "Corrente";
+	private static final String current = "Corr";
 	private static final String media = "Medio";
 	private static final String max = "Massimo";
 	private static final String min = "Minimo";
 	
 	private static final String separator = ": ";
 	private static final String nullValue = "-";
+	private static final double MULT = 1024*1024;
 	
 	protected GraphPanel graph;
 	
 	/**
 	 * Create the panel.
 	 */
-	public CPUMetric(){
-		super("CPU", 1);
+	public NetMetric(){
+		super("Network", 1);
 		
 		//avvia il task
 		super.startTask();
@@ -71,13 +74,24 @@ public class CPUMetric extends Metrics{
 
 	@Override
 	protected void upDate(){
-		double total = MyJarLauncher.getInstance().getOperatesystem().getProcess(MyJarLauncher.getInstance().getPid()).getProcessCpuLoadCumulative();
-		for(ExecuteJar jar : MyJarLauncher.getInstance().getContainer().getJars().values()) {
-			if(jar.getProcess() != null && jar.getProcess().isAlive()) {
-				total += jar.getDataProcess().getData().getProcessCpuLoadCumulative();
+		double total = 0;
+		
+		for(NetworkIF net : MyJarLauncher.getInstance().getSysteminfo().getHardware().getNetworkIFs()) {
+			NetworkInterface netInfo = net.queryNetworkInterface();
+			try{
+				if(!netInfo.isLoopback()) {
+					if(netInfo.isUp()) {
+						if(!net.getDisplayName().contains("VirtualBox")) {
+							total += net.getPacketsRecv();
+						}
+					}
+				}
+			}catch(SocketException e){
+				e.printStackTrace();
 			}
+			net.updateAttributes();
 		}
-		super.addValueToList(total);
+		super.addValueToList(total / MULT);
 	}
 
 	@Override

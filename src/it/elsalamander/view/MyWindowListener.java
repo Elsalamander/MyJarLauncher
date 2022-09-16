@@ -3,6 +3,15 @@ package it.elsalamander.view;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+/*********************************************************************
+ * Listener del Frame del launcher
+ * 
+ * 
+ * @author: Elsalamander
+ * @data: 14 set 2022
+ * @version: v1.0.0
+ * 
+ *********************************************************************/
 public class MyWindowListener implements WindowListener{
 
 	private MainGui gui;

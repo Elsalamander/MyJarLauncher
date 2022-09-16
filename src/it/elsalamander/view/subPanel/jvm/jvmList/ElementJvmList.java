@@ -6,6 +6,15 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import it.elsalamander.view.subPanel.jvm.JvmPanel;
 
+/*********************************************************************
+ * Elemento di una lista
+ * 
+ * 
+ * @author: Elsalamander
+ * @data: 14 set 2022
+ * @version: v2.0.1
+ * 
+ *********************************************************************/
 public class ElementJvmList extends JButton{
 	
 	private static final long serialVersionUID = -1480651471856582346L;

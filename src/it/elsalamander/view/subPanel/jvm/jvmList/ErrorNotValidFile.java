@@ -9,6 +9,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+/*********************************************************************
+ * Finestra di dialogo per file non valido
+ * 
+ * 
+ * @author: Elsalamander
+ * @data: 14 set 2022
+ * @version: v1.0.0
+ * 
+ *********************************************************************/
 public class ErrorNotValidFile extends JDialog{
 	
 	private static final long serialVersionUID = 4811616928522148800L;

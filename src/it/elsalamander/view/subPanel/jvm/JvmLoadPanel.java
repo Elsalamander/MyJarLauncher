@@ -11,6 +11,15 @@ import it.elsalamander.processi.ContainerProcess;
 import it.elsalamander.view.subPanel.jvm.jvmList.ElementJvmList;
 import it.elsalamander.view.subPanel.jvm.jvmList.ErrorNotValidFile;
 
+/*********************************************************************
+ * Interfaccia grafica per il caricamento di un file
+ * 
+ * 
+ * @author: Elsalamander
+ * @data: 14 set 2022
+ * @version: v1.0.0
+ * 
+ *********************************************************************/
 public class JvmLoadPanel extends JvmSubPanel{
 	
 	private static final long serialVersionUID = -1713934939552871137L;
@@ -45,6 +54,11 @@ public class JvmLoadPanel extends JvmSubPanel{
 	            //carica il file jar
 	            ContainerProcess container = MyJarLauncher.getInstance().getContainer();
 	            int indexJar = container.loadJar(selectedFile);
+	            
+	            if(indexJar == -1) {
+	            	return;
+	            }
+	            
 	            ExecuteJar execJar = container.get(indexJar);
 	            
 	            ElementJvmList element = consoles.getList().createNewElement(indexJar, execJar, name);

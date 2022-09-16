@@ -17,7 +17,7 @@ import it.elsalamander.view.subPanel.jvm.jvmList.JvmList;
  * 
  * @author: Elsalamander
  * @data: 11 set 2022
- * @version: v1.0.0
+ * @version: v2.1.2
  * 
  *********************************************************************/
 public class JvmPanel extends SubPanel{
